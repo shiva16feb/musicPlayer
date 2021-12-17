@@ -5,6 +5,10 @@ const artist = document.getElementById("artist");
 const img = document.querySelector("img");
 const music = document.querySelector("audio");
 const Next = document.querySelector("#next");
+const progress = document.getElementById("progress");
+const currenttime = document.getElementById("current_time");
+const total_Duration = document.getElementById("duration");
+const proggressbarDiv = document.getElementById("progressbar_div");
 
 const songs = [{
     name:"kgf-1",
@@ -61,6 +65,35 @@ const pauseMusic =  () => {
  loadSong(songs[songIndex]);
  playMusic();
 };
+// progress work js
+music.addEventListener("timeupdate", (shiv) =>{
+    const { currentTime , duration } = shiv.target;
+    let progress_time = (currentTime/duration)*100;
+    progress.style.width = `${progress_time}%`;
+
+    // duration work js
+    let minute_duration = Math.floor(duration/60);
+    let sec_duration = Math.floor(duration%60);
+    let tot_duration = `${ minute_duration} : ${sec_duration}`; 
+   if (duration) {
+    total_Duration.textContent = `${tot_duration}`;
+   };
+//    current duration work js
+     let minute_currentTime = Math.floor(currentTime/60);
+    let sec_currentTime = Math.floor(currentTime%60);
+    if (sec_currentTime<10) {
+        sec_currentTime = `0${sec_currentTime}`;
+    };
+    let tot_currentTime = `${ minute_currentTime} : ${sec_currentTime}`; 
+   currenttime.textContent = `${tot_currentTime}`;
+});
+proggressbarDiv.addEventListener("click", (shiva) =>{
+  const {duration} = music;
+  let move_progress = (shiva.offsetX / shiva.target.clientWidth)*duration;
+  music.currentTime = move_progress;
+});
+
+music.addEventListener("ended", nextSong );
 
   Next.addEventListener("click", nextSong);
   prev.addEventListener("click", prevSong);
